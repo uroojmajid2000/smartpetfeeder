@@ -123,6 +123,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       String email = _emailController.text;
                       String password = _passwordController.text;
 
+                      if (email.isEmpty || password.isEmpty) {
+                        Fluttertoast.showToast(
+                          msg: "Email and Password can\'t be empty.",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                        );
+                        return;
+                      }
+
                       Map<String, dynamic> response =
                           await _signupController.login(
                         email: email,
