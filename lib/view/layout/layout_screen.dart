@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:smart_pet_feeder/res/components/notification_widget.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
 import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
+import 'package:smart_pet_feeder/view/layout/readin_model.dart';
 import 'package:smart_pet_feeder/view/login/login_screen.dart';
 
 class LayoutScreen extends StatefulWidget {
@@ -15,12 +16,30 @@ class LayoutScreen extends StatefulWidget {
 class _LayoutScreenState extends State<LayoutScreen> {
   final SignupController _signupController = Get.put(SignupController());
   bool _isLoggingOut = false;
+  ReadingModel? _readingData;
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    var result = await _signupController.getReadings();
+    if (result['success']) {
+      setState(() {
+        _readingData = ReadingModel.fromJson(result['data']);
+      });
+    } else {
+      // Handle error
+    }
   }
 
   Widget _getBody() {
@@ -75,7 +94,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
                     child: Center(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("33°C"),
+                      child: Text(_readingData?.data.temperature ?? "0"),
                     )),
                   )
                 ],
@@ -99,7 +118,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
                     child: Center(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("30°C"),
+                      child: Text(_readingData?.data.humidity ?? "0"),
                     )),
                   )
                 ],
@@ -123,7 +142,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
                     child: Center(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("33°C"),
+                      child: Text(_readingData?.data.moisture ?? "0"),
                     )),
                   )
                 ],

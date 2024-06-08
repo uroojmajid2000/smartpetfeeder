@@ -86,7 +86,28 @@ class SignupController extends GetxController {
 
 
 
+ Future<Map<String, dynamic>> getReadings() async {
+    var response = await http.get(
+      Uri.parse('https://admin.ktirioapp.com/api/get_readings'),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $_token',
+      },
+    );
 
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      return {
+        'success': true,
+        'data': jsonData,
+      };
+    } else {
+      return {
+        'success': false,
+        'message': response.reasonPhrase,
+      };
+    }
+  }
 
 
 
