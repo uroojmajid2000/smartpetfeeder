@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:smart_pet_feeder/res/components/custom_button.dart';
 import 'package:smart_pet_feeder/res/components/custom_password_textfield.dart';
 import 'package:smart_pet_feeder/res/components/custom_textfield.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
-
 import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -171,7 +170,8 @@ class _SignupScreenState extends State<SignupScreen> {
                         String contact = _contactController.text;
                         String cnic = _cnicController.text;
 
-                        bool success = await _signupController.signup(
+                        Map<String, dynamic> result =
+                            await _signupController.signup(
                           name: name,
                           email: email,
                           password: password,
@@ -180,22 +180,17 @@ class _SignupScreenState extends State<SignupScreen> {
                           cnic: cnic,
                         );
 
-                        if (success) {
-                          Fluttertoast.showToast(
-                            msg: "You have registered successfully",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.green,
-                            textColor: Colors.white,
-                          );
-                        } else {
-                          Fluttertoast.showToast(
-                            msg: "Registration failed. Please try again.",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                          );
+                        Fluttertoast.showToast(
+                          msg: result['message'],
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor:
+                              result['success'] ? Colors.green : Colors.red,
+                          textColor: Colors.white,
+                        );
+
+                        if (result['success']) {
+                          Get.toNamed(RouteName.loginScreen);
                         }
                       },
                     ),

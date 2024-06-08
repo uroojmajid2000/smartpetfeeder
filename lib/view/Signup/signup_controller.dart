@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class SignupController extends GetxController {
-  Future<bool> signup({
+  Future<Map<String, dynamic>> signup({
     required String name,
     required String email,
     required String password,
@@ -31,15 +31,15 @@ class SignupController extends GetxController {
     if (response.statusCode == 200) {
       var responseData = await response.stream.bytesToString();
       var jsonData = json.decode(responseData);
-      if (jsonData['success'] == true) {
-        return true;
-      } else {
-        print(jsonData['message']);
-        return false;
-      }
+      return {
+        'success': jsonData['success'],
+        'message': jsonData['message'],
+      };
     } else {
-      print(response.reasonPhrase);
-      return false;
+      return {
+        'success': false,
+        'message': response.reasonPhrase,
+      };
     }
   }
 }
