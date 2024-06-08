@@ -170,6 +170,22 @@ class _SignupScreenState extends State<SignupScreen> {
                         String contact = _contactController.text;
                         String cnic = _cnicController.text;
 
+                        // Perform validation
+                        if (name.isEmpty ||
+                            email.isEmpty ||
+                            password.isEmpty ||
+                            contact.isEmpty ||
+                            cnic.isEmpty) {
+                          Fluttertoast.showToast(
+                            msg: 'Please fill all required fields',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                          );
+                          return;
+                        }
+
                         Map<String, dynamic> result =
                             await _signupController.signup(
                           name: name,
