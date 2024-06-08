@@ -42,4 +42,39 @@ class SignupController extends GetxController {
       };
     }
   }
+
+
+
+     Future<Map<String, dynamic>> login({
+    required String email,
+    required String password,
+  }) async {
+    var headers = {
+      'Accept': 'application/json',
+    };
+    var request = http.MultipartRequest('POST', Uri.parse('https://admin.ktirioapp.com/api/login'));
+    request.fields.addAll({
+      'email': email,
+      'password': password,
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.bytesToString();
+      var jsonData = json.decode(responseData);
+      return {
+        'success': jsonData['success'],
+        'message': jsonData['message'],
+      };
+    } else {
+      return {
+        'success': false,
+        'message': response.reasonPhrase,
+      };
+    }
+  }
+
+
 }

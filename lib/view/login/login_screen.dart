@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:smart_pet_feeder/res/components/custom_button.dart';
 import 'package:smart_pet_feeder/res/components/custom_password_textfield.dart';
 import 'package:smart_pet_feeder/res/components/custom_textfield.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
+import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordValid = false;
   bool _isObscure = true;
@@ -33,6 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final SignupController _signupController = Get.put(SignupController());
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xff154C79),
@@ -60,21 +65,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 50),
                   CustomTextField(
+                    controller: _emailController,
                     hintText: 'Email',
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
-                    // prefixIcon: Icon(Icons.email),
                     onChanged: (value) {
                       print('Email: $value');
                     },
                   ),
                   SizedBox(height: 20),
                   CustomPasswordTextField(
+                    controller: _passwordController,
                     hintText: 'Password',
                     obscureText: _isObscure,
-                    controller: _passwordController,
                     textInputAction: TextInputAction.done,
-                    // prefixIcon: Icon(Icons.lock),
                     onChanged: (value) {
                       print('Password: $value');
                       _validatePassword(value);
@@ -115,9 +119,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 25),
                   CustomButton(
                     text: 'Login',
-                    onTap: () {
-                      print('Login button tapped');
-                      Get.toNamed(RouteName.layoutscreen);
+                    onTap: () async {
+                      String email = _emailController.text;
+                      String password = _passwordController.text;
+
+                      Map<String, dynamic> response =
+                          await _signupController.login(
+                        email: email,
+                        password: password,
+                      );
+
+                      if (response['success']) {
+                        Fluttertoast.showToast(
+                          msg: response['message'],
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                        );
+                        Get.toNamed(RouteName.layoutscreen);
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: response['message'] ??
+                              "Login failed. Please try again.",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                        );
+                      }
                     },
                   ),
                 ],
