@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -11,6 +13,7 @@ import 'package:simple_table_calendar/simple_table_calendar.dart';
 import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
+import 'package:http/http.dart' as http;
 
 class ScheduleCreateScreen extends StatefulWidget {
   const ScheduleCreateScreen({super.key});
@@ -33,6 +36,35 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  List<dynamic> scheduleData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getSchedule();
+  }
+
+  Future<void> getSchedule() async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer 22|oQrOq5LnozFSSNrCU9Ptm3gFMWBcnqbJAB2dKnPr'
+    };
+    var request = http.Request(
+        'GET', Uri.parse('https://admin.ktirioapp.com/api/get_schedule'));
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String jsonResponse = await response.stream.bytesToString();
+      setState(() {
+        scheduleData = json.decode(jsonResponse)['data'];
+      });
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 
   Widget _getBody() {
@@ -262,20 +294,35 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
             SizedBox(
               height: 30,
             ),
-            scheduledDone(
-              work: 'Drop Food',
-              colorLine: Color(0xff47CA9B),
+            ListView.builder(
+              scrollDirection: Axis.vertical,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: scheduleData.length,
+              itemBuilder: (BuildContext context, int index) {
+                var schedule = scheduleData[index];
+
+                List<Color> colors = [
+                  Color(0xff47CA9B),
+                  Color.fromARGB(255, 245, 138, 61),
+                  Color.fromARGB(255, 20, 189, 231),
+                  Color(0xffFF0000),
+                  Color.fromARGB(255, 0, 255, 55),
+                  Color.fromARGB(255, 215, 238, 10),
+                ];
+
+                Color colorLine = colors[index % colors.length];
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: scheduledDone(
+                    datetime: '${schedule['date']} - ${schedule['time']}',
+                    work: '${schedule['task']}',
+                    colorLine: colorLine,
+                  ),
+                );
+              },
             ),
-            SizedBox(
-              height: 10,
-            ),
-            scheduledDone(
-              work: 'Drop Water',
-              colorLine: Color(0xff00A3FF),
-            ),
-            SizedBox(
-              height: 310,
-            )
           ],
         ],
       ),

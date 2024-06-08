@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 class scheduledDone extends StatelessWidget {
   final String work;
+  final String datetime;
   final Color colorLine;
   const scheduledDone({
     super.key,
     required this.work,
-    required this.colorLine,
+    required this.colorLine, required this.datetime,
   });
 
   @override
@@ -42,7 +43,8 @@ class scheduledDone extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  ' 28 Oct - 08:00 PM',
+                  // ' 28 Oct - 08:00 PM',
+                  datetime,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
