@@ -45,6 +45,7 @@ class SignupController extends GetxController {
 
   String? _token;
   int? _userId;
+  String? get token => _token;
 
   Future<Map<String, dynamic>> login({
     required String email,

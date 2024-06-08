@@ -25,6 +25,7 @@ class ScheduleCreateScreen extends StatefulWidget {
 
 class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
   final SignupController _signupController = Get.put(SignupController());
+
   final TextEditingController _nameController = TextEditingController();
   int _selectedIndex = 0;
   DateTime? _selectedDay;
@@ -49,9 +50,14 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
   }
 
   Future<void> getSchedule() async {
+    if (_signupController.token == null) {
+      print('Token not found. Please log in.');
+      return;
+    }
+
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer 22|oQrOq5LnozFSSNrCU9Ptm3gFMWBcnqbJAB2dKnPr'
+      'Authorization': 'Bearer ${_signupController.token}'
     };
     var request = http.Request(
         'GET', Uri.parse('https://admin.ktirioapp.com/api/get_schedule'));
@@ -266,6 +272,8 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
                                 backgroundColor: Colors.green,
                                 textColor: Colors.white,
                               );
+
+                              getSchedule();
                             } else {
                               print(
                                   'Failed to create schedule: ${result['message']}');
@@ -315,7 +323,7 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
             ),
           ] else ...[
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             ListView.builder(
               scrollDirection: Axis.vertical,
