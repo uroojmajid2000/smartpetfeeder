@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/src/routes/get_transition_mixin.dart';
 import 'package:smart_pet_feeder/res/components/notification_widget.dart';
 import 'package:smart_pet_feeder/res/components/schedule_done.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
@@ -169,9 +170,8 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
             SizedBox(
               height: 8,
             ),
-
-            ElevatedButton(
-              onPressed: () async {
+            GestureDetector(
+              onTap: () async {
                 if (_selectedDay == null || _selectedTime == null) {
                   Fluttertoast.showToast(
                     msg: 'Please Select Date & Time',
@@ -203,39 +203,37 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
                   print('Failed to create schedule: ${result['message']}');
                 }
               },
-              child: Text('Schedule'),
-            )
-
-            // Container(
-            //   width: 129,
-            //   height: 35,
-            //   decoration: ShapeDecoration(
-            //     color: Color(0xFF7487F9),
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(100),
-            //     ),
-            //     shadows: [
-            //       BoxShadow(
-            //         color: Color(0x3F000000),
-            //         blurRadius: 4,
-            //         offset: Offset(0, 4),
-            //         spreadRadius: 0,
-            //       )
-            //     ],
-            //   ),
-            //   child: Center(
-            //     child: Text(
-            //       'Schedule',
-            //       textAlign: TextAlign.center,
-            //       style: TextStyle(
-            //         color: Colors.white,
-            //         fontSize: 16,
-            //         fontFamily: 'Montserrat',
-            //         fontWeight: FontWeight.w400,
-            //       ),
-            //     ),
-            //   ),
-            // ),
+              child: Container(
+                width: 129,
+                height: 35,
+                decoration: ShapeDecoration(
+                  color: Color(0xFF7487F9),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  shadows: [
+                    BoxShadow(
+                      color: Color(0x3F000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                      spreadRadius: 0,
+                    )
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    'Schedule',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ] else ...[
             SizedBox(
               height: 30,
