@@ -25,6 +25,7 @@ class ScheduleCreateScreen extends StatefulWidget {
 
 class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
   final SignupController _signupController = Get.put(SignupController());
+  final TextEditingController _nameController = TextEditingController();
   int _selectedIndex = 0;
   DateTime? _selectedDay;
   DateTime? _selectedTime;
@@ -156,7 +157,7 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: CustomTextField(
-                // controller: _nameController,
+                controller: _nameController,
                 hintText: 'Task Name',
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -227,9 +228,11 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
                     onTap: _isLoading
                         ? null
                         : () async {
-                            if (_selectedDay == null || _selectedTime == null) {
+                            if (_selectedDay == null ||
+                                _selectedTime == null ||
+                                _nameController.text.isEmpty) {
                               Fluttertoast.showToast(
-                                msg: 'Please Select Date & Time',
+                                msg: 'Please Provide All Details',
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 backgroundColor: Colors.red,
@@ -243,6 +246,7 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
                             });
 
                             var result = await _signupController.createSchedule(
+                              task: _nameController.text,
                               date:
                                   '${_selectedDay!.day}-${_selectedDay!.month}-${_selectedDay!.year}',
                               time:

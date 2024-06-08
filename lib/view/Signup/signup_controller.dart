@@ -155,6 +155,7 @@ class SignupController extends GetxController {
  Future<Map<String, dynamic>> createSchedule({
     required String date,
     required String time,
+    required String task,
   }) async {
     if (_token == null) {
       return {
@@ -173,7 +174,7 @@ class SignupController extends GetxController {
       'date': date,
       'time': time,
       'user_id': _userId.toString(), 
-      'task': 'Food Deliver',
+      'task': task,
     });
     request.headers.addAll(headers);
 
