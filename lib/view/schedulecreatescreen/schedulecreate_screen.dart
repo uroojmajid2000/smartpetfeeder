@@ -27,6 +27,7 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
   DateTime _focusedDay = DateTime.now();
   bool isCreateSelected = true;
   bool _isLoggingOut = false;
+  bool _isLoading = false;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -170,70 +171,93 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
             SizedBox(
               height: 8,
             ),
-            GestureDetector(
-              onTap: () async {
-                if (_selectedDay == null || _selectedTime == null) {
-                  Fluttertoast.showToast(
-                    msg: 'Please Select Date & Time',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                  );
+            _isLoading
+                ? CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                : GestureDetector(
+                    onTap: _isLoading
+                        ? null
+                        : () async {
+                            if (_selectedDay == null || _selectedTime == null) {
+                              Fluttertoast.showToast(
+                                msg: 'Please Select Date & Time',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                              );
+                              return;
+                            }
 
-                  return;
-                }
+                            setState(() {
+                              _isLoading = true; // Set loading state to true
+                            });
 
-                var result = await _signupController.createSchedule(
-                  date:
-                      '${_selectedDay!.day}-${_selectedDay!.month}-${_selectedDay!.year}',
-                  time:
-                      '${_selectedTime!.hour}:${_selectedTime!.minute} ${_selectedTime!.hour < 12 ? 'AM' : 'PM'}',
-                );
-                if (result['success']) {
-                  print('Schedule created successfully');
-                  Fluttertoast.showToast(
-                    msg: result['message'],
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                  );
-                } else {
-                  print('Failed to create schedule: ${result['message']}');
-                }
-              },
-              child: Container(
-                width: 129,
-                height: 35,
-                decoration: ShapeDecoration(
-                  color: Color(0xFF7487F9),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  shadows: [
-                    BoxShadow(
-                      color: Color(0x3F000000),
-                      blurRadius: 4,
-                      offset: Offset(0, 4),
-                      spreadRadius: 0,
-                    )
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    'Schedule',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w400,
+                            var result = await _signupController.createSchedule(
+                              date:
+                                  '${_selectedDay!.day}-${_selectedDay!.month}-${_selectedDay!.year}',
+                              time:
+                                  '${_selectedTime!.hour}:${_selectedTime!.minute} ${_selectedTime!.hour < 12 ? 'AM' : 'PM'}',
+                            );
+
+                            setState(() {
+                              _isLoading = false; // Set loading state to false
+                            });
+
+                            if (result['success']) {
+                              print('Schedule created successfully');
+                              Fluttertoast.showToast(
+                                msg: result['message'],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                              );
+                            } else {
+                              print(
+                                  'Failed to create schedule: ${result['message']}');
+                            }
+                          },
+                    child: Container(
+                      width: 129,
+                      height: 35,
+                      decoration: ShapeDecoration(
+                        color: Color(0xFF7487F9),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        shadows: [
+                          BoxShadow(
+                            color: Color(0x3F000000),
+                            blurRadius: 4,
+                            offset: Offset(0, 4),
+                            spreadRadius: 0,
+                          )
+                        ],
+                      ),
+                      child: Center(
+                        child:
+
+                            // _isLoading
+                            //     ? CircularProgressIndicator(
+                            //       color: Colors.white,
+                            //     )
+                            //     :
+
+                            Text(
+                          'Schedule',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ),
+                  )
           ] else ...[
             SizedBox(
               height: 30,
