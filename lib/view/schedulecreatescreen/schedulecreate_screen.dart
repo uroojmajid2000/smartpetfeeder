@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/get_transition_mixin.dart';
+import 'package:smart_pet_feeder/res/components/custom_textfield.dart';
 import 'package:smart_pet_feeder/res/components/notification_widget.dart';
 import 'package:smart_pet_feeder/res/components/schedule_done.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
@@ -94,11 +95,11 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
             ),
           ),
           SizedBox(
-            height: 5,
+            height: 10,
           ),
           Container(
             color: Color(0xff154C79),
-            height: 40,
+            height: 50,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -149,6 +150,21 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
             ),
           ),
           if (isCreateSelected) ...[
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: CustomTextField(
+                // controller: _nameController,
+                hintText: 'Task Name',
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                onChanged: (value) {
+                  print('Name: $value');
+                },
+              ),
+            ),
             TableCalendar(
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
@@ -169,7 +185,7 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
               },
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -201,7 +217,7 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
                   ]),
             ),
             SizedBox(
-              height: 8,
+              height: 20,
             ),
             _isLoading
                 ? CircularProgressIndicator(
@@ -289,7 +305,10 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
                         ),
                       ),
                     ),
-                  )
+                  ),
+            SizedBox(
+              height: 20,
+            ),
           ] else ...[
             SizedBox(
               height: 30,
