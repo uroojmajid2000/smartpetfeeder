@@ -43,16 +43,17 @@ class SignupController extends GetxController {
     }
   }
 
+  String? _token;
 
-
-     Future<Map<String, dynamic>> login({
+  Future<Map<String, dynamic>> login({
     required String email,
     required String password,
   }) async {
     var headers = {
       'Accept': 'application/json',
     };
-    var request = http.MultipartRequest('POST', Uri.parse('https://admin.ktirioapp.com/api/login'));
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('https://admin.ktirioapp.com/api/login'));
     request.fields.addAll({
       'email': email,
       'password': password,
@@ -64,6 +65,10 @@ class SignupController extends GetxController {
     if (response.statusCode == 200) {
       var responseData = await response.stream.bytesToString();
       var jsonData = json.decode(responseData);
+
+      // Store the token
+      _token = jsonData['token'];
+
       return {
         'success': jsonData['success'],
         'message': jsonData['message'],
@@ -77,4 +82,90 @@ class SignupController extends GetxController {
   }
 
 
+
+
+
+
+
+
+
+ // Method to logout
+  Future<Map<String, dynamic>> logout() async {
+    if (_token == null) {
+      return {
+        'success': false,
+        'message': 'Token not found. Please log in.',
+      };
+    }
+
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token', // Include the token in the headers
+    };
+    var request = http.Request('POST', Uri.parse('https://admin.ktirioapp.com/api/logout'));
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.bytesToString();
+      var jsonData = json.decode(responseData);
+
+      // Clear the token
+      _token = null;
+
+      return {
+        'success': jsonData['success'],
+        'message': jsonData['message'],
+      };
+    } else {
+      return {
+        'success': false,
+        'message': response.reasonPhrase,
+      };
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+// Method to get data using the stored token
+  Future<Map<String, dynamic>> getData() async {
+    if (_token == null) {
+      return {
+        'success': false,
+        'message': 'Token not found. Please log in.',
+      };
+    }
+
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token', // Include the token in the headers
+    };
+
+    var response = await http.get(
+      Uri.parse('https://admin.ktirioapp.com/api/your-get-api-endpoint'),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      return {
+        'success': true,
+        'data': jsonData,
+      };
+    } else {
+      return {
+        'success': false,
+        'message': response.reasonPhrase,
+      };
+    }
+  }
 }

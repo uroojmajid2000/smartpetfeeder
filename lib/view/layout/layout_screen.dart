@@ -259,6 +259,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_pet_feeder/res/components/notification_widget.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
+import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
+import 'package:smart_pet_feeder/view/login/login_screen.dart';
 
 class LayoutScreen extends StatefulWidget {
   const LayoutScreen({super.key});
@@ -268,6 +270,8 @@ class LayoutScreen extends StatefulWidget {
 }
 
 class _LayoutScreenState extends State<LayoutScreen> {
+  final SignupController _signupController = Get.put(SignupController());
+
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -460,18 +464,33 @@ class _LayoutScreenState extends State<LayoutScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Image.asset("assets/icons/back_icon.png"),
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: ShapeDecoration(
-                            color: Colors.red,
-                            image: DecorationImage(
-                              image:
-                                  AssetImage("assets/images/profile_image.png"),
-                              fit: BoxFit.fill,
-                            ),
-                            shape: OvalBorder(),
-                          ),
+                        // Container(
+                        //   width: 40,
+                        //   height: 40,
+                        //   decoration: ShapeDecoration(
+                        //     color: Colors.red,
+                        //     image: DecorationImage(
+                        //       image:
+                        //           AssetImage("assets/images/profile_image.png"),
+                        //       fit: BoxFit.fill,
+                        //     ),
+                        //     shape: OvalBorder(),
+                        //   ),
+                        // ),
+
+                        IconButton(
+                          icon: Icon(Icons.logout),
+                          onPressed: () async {
+                            var result = await _signupController.logout();
+                            if (result['success']) {
+                              // Handle successful logout (e.g., navigate to login screen)
+                              // Get.offAll(LoginScreen());
+                              Get.offAllNamed(RouteName.loginScreen);
+                            } else {
+                              // Show error message
+                              Get.snackbar('Error', result['message']);
+                            }
+                          },
                         ),
                       ],
                     ),
@@ -516,7 +535,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
                               //   });
                               // },
 
-                             onTap: () {
+                              onTap: () {
                                 Get.toNamed(RouteName.schedulecreatescreen);
                               },
                               child:
