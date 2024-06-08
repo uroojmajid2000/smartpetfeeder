@@ -44,6 +44,7 @@ class SignupController extends GetxController {
   }
 
   String? _token;
+  int? _userId;
 
   Future<Map<String, dynamic>> login({
     required String email,
@@ -68,6 +69,7 @@ class SignupController extends GetxController {
 
       // Store the token
       _token = jsonData['token'];
+      _userId = jsonData['data']['id'];
 
       return {
         'success': jsonData['success'],
@@ -129,7 +131,47 @@ class SignupController extends GetxController {
 
 
 
+ Future<Map<String, dynamic>> createSchedule({
+    required String date,
+    required String time,
+  }) async {
+    if (_token == null) {
+      return {
+        'success': false,
+        'message': 'Token not found. Please log in.',
+      };
+    }
 
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('https://admin.ktirioapp.com/api/create_schedule'));
+    request.fields.addAll({
+      'date': date,
+      'time': time,
+      'user_id': _userId.toString(), 
+      'task': 'Food Deliver',
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.bytesToString();
+      var jsonData = json.decode(responseData);
+      return {
+        'success': jsonData['success'],
+        'message': jsonData['message'],
+      };
+    } else {
+      return {
+        'success': false,
+        'message': response.reasonPhrase,
+      };
+    }
+  }
 
 
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:smart_pet_feeder/res/components/notification_widget.dart';
 import 'package:smart_pet_feeder/res/components/schedule_done.dart';
@@ -168,36 +169,73 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
             SizedBox(
               height: 8,
             ),
-            Container(
-              width: 129,
-              height: 35,
-              decoration: ShapeDecoration(
-                color: Color(0xFF7487F9),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                shadows: [
-                  BoxShadow(
-                    color: Color(0x3F000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 4),
-                    spreadRadius: 0,
-                  )
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  'Schedule',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            ),
+
+            ElevatedButton(
+              onPressed: () async {
+                if (_selectedDay == null || _selectedTime == null) {
+                  Fluttertoast.showToast(
+                    msg: 'Please Select Date & Time',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                  );
+
+                  return;
+                }
+
+                var result = await _signupController.createSchedule(
+                  date:
+                      '${_selectedDay!.day}-${_selectedDay!.month}-${_selectedDay!.year}',
+                  time:
+                      '${_selectedTime!.hour}:${_selectedTime!.minute} ${_selectedTime!.hour < 12 ? 'AM' : 'PM'}',
+                );
+                if (result['success']) {
+                  print('Schedule created successfully');
+                  Fluttertoast.showToast(
+                    msg: result['message'],
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                  );
+                } else {
+                  print('Failed to create schedule: ${result['message']}');
+                }
+              },
+              child: Text('Schedule'),
+            )
+
+            // Container(
+            //   width: 129,
+            //   height: 35,
+            //   decoration: ShapeDecoration(
+            //     color: Color(0xFF7487F9),
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(100),
+            //     ),
+            //     shadows: [
+            //       BoxShadow(
+            //         color: Color(0x3F000000),
+            //         blurRadius: 4,
+            //         offset: Offset(0, 4),
+            //         spreadRadius: 0,
+            //       )
+            //     ],
+            //   ),
+            //   child: Center(
+            //     child: Text(
+            //       'Schedule',
+            //       textAlign: TextAlign.center,
+            //       style: TextStyle(
+            //         color: Colors.white,
+            //         fontSize: 16,
+            //         fontFamily: 'Montserrat',
+            //         fontWeight: FontWeight.w400,
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ] else ...[
             SizedBox(
               height: 30,
