@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_pet_feeder/res/components/notification_widget.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
+import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -11,6 +12,8 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
+  final SignupController _signupController = Get.put(SignupController());
+  bool _isLoggingOut = false;
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -145,18 +148,54 @@ class _CameraScreenState extends State<CameraScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Image.asset("assets/icons/back_icon.png"),
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: ShapeDecoration(
-                            color: Colors.red,
-                            image: DecorationImage(
-                              image:
-                                  AssetImage("assets/images/profile_image.png"),
-                              fit: BoxFit.fill,
+                        Row(
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: ShapeDecoration(
+                                color: Colors.red,
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      "assets/images/profile_image.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                                shape: OvalBorder(),
+                              ),
                             ),
-                            shape: OvalBorder(),
-                          ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                           _isLoggingOut
+                                ? CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : IconButton(
+                                    icon: Icon(
+                                      Icons.logout,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: _isLoggingOut
+                                        ? null
+                                        : () async {
+                                            setState(() {
+                                              _isLoggingOut = true;
+                                            });
+                                            var result = await _signupController
+                                                .logout();
+                                            setState(() {
+                                              _isLoggingOut = false;
+                                            });
+                                            if (result['success']) {
+                                              Get.offAllNamed(
+                                                  RouteName.loginScreen);
+                                            } else {
+                                              Get.snackbar(
+                                                  'Error', result['message']);
+                                            }
+                                          },
+                                  ),
+                          ],
                         ),
                       ],
                     ),

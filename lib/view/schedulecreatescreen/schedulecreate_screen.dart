@@ -6,6 +6,7 @@ import 'package:smart_pet_feeder/res/components/notification_widget.dart';
 import 'package:smart_pet_feeder/res/components/schedule_done.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
 import 'package:simple_table_calendar/simple_table_calendar.dart';
+import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
@@ -17,11 +18,14 @@ class ScheduleCreateScreen extends StatefulWidget {
 }
 
 class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
+  final SignupController _signupController = Get.put(SignupController());
   int _selectedIndex = 0;
   DateTime? _selectedDay;
   DateTime? _selectedTime;
   DateTime _focusedDay = DateTime.now();
   bool isCreateSelected = true;
+  bool _isLoggingOut = false;
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -109,91 +113,6 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
               ],
             ),
           ),
-
-          // TableCalendar(
-          //   firstDay: DateTime.utc(2010, 10, 16),
-          //   lastDay: DateTime.utc(2030, 3, 14),
-          //   focusedDay: DateTime.now(),
-          //   calendarFormat: CalendarFormat.month,
-          //   availableCalendarFormats: const {
-          //     CalendarFormat.month: 'Month',
-          //   },
-          //   selectedDayPredicate: (day) {
-          //     return isSameDay(_selectedDay, day);
-          //   },
-          //   onDaySelected: (selectedDay, focusedDay) {
-          //     setState(() {
-          //       _selectedDay = selectedDay;
-          //       _focusedDay = focusedDay;
-          //     });
-          //     print('Selected day: $selectedDay');
-          //   },
-          // ),
-          // SizedBox(
-          //   height: 10,
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 20),
-          //   child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         Text(
-          //           ' Select Time',
-          //           style: TextStyle(
-          //             color: Colors.white,
-          //             fontSize: 18,
-          //             fontFamily: 'Inter',
-          //             fontWeight: FontWeight.w400,
-          //           ),
-          //         ),
-          //         TimePickerSpinnerPopUp(
-          //           mode: CupertinoDatePickerMode.time,
-          //           initTime:
-          //               _selectedTime != null ? _selectedTime : DateTime.now(),
-          //           use24hFormat: true,
-          //           onChange: (dateTime) {
-          //             setState(() {
-          //               _selectedTime = dateTime;
-          //             });
-          //             print('Selected day: $_selectedTime');
-          //           },
-          //         ),
-          //       ]),
-          // ),
-          // SizedBox(
-          //   height: 8,
-          // ),
-          // Container(
-          //   width: 129,
-          //   height: 35,
-          //   decoration: ShapeDecoration(
-          //     color: Color(0xFF7487F9),
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(100),
-          //     ),
-          //     shadows: [
-          //       BoxShadow(
-          //         color: Color(0x3F000000),
-          //         blurRadius: 4,
-          //         offset: Offset(0, 4),
-          //         spreadRadius: 0,
-          //       )
-          //     ],
-          //   ),
-          //   child: Center(
-          //     child: Text(
-          //       'Schedule',
-          //       textAlign: TextAlign.center,
-          //       style: TextStyle(
-          //         color: Colors.white,
-          //         fontSize: 16,
-          //         fontFamily: 'Montserrat',
-          //         fontWeight: FontWeight.w400,
-          //       ),
-          //     ),
-          //   ),
-          // )
-
           if (isCreateSelected) ...[
             TableCalendar(
               firstDay: DateTime.utc(2010, 10, 16),
@@ -298,8 +217,6 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
               height: 310,
             )
           ],
-
-          // Spacer()
         ],
       ),
     );
@@ -376,18 +293,54 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Image.asset("assets/icons/back_icon.png"),
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: ShapeDecoration(
-                            color: Colors.red,
-                            image: DecorationImage(
-                              image:
-                                  AssetImage("assets/images/profile_image.png"),
-                              fit: BoxFit.fill,
+                        Row(
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: ShapeDecoration(
+                                color: Colors.red,
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      "assets/images/profile_image.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                                shape: OvalBorder(),
+                              ),
                             ),
-                            shape: OvalBorder(),
-                          ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            _isLoggingOut
+                                ? CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : IconButton(
+                                    icon: Icon(
+                                      Icons.logout,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: _isLoggingOut
+                                        ? null
+                                        : () async {
+                                            setState(() {
+                                              _isLoggingOut = true;
+                                            });
+                                            var result = await _signupController
+                                                .logout();
+                                            setState(() {
+                                              _isLoggingOut = false;
+                                            });
+                                            if (result['success']) {
+                                              Get.offAllNamed(
+                                                  RouteName.loginScreen);
+                                            } else {
+                                              Get.snackbar(
+                                                  'Error', result['message']);
+                                            }
+                                          },
+                                  ),
+                          ],
                         ),
                       ],
                     ),
@@ -418,12 +371,6 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
                             ),
                             SizedBox(height: 25),
                             GestureDetector(
-                              // onTap: () {
-                              //   setState(() {
-                              //     _selectedIndex = 0;
-                              //   });
-                              // },
-
                               onTap: () {
                                 Get.toNamed(RouteName.schedulecreatescreen);
                               },
