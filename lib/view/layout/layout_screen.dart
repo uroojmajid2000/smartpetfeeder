@@ -94,7 +94,8 @@ class _LayoutScreenState extends State<LayoutScreen> {
                     child: Center(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(_readingData?.data.temperature ?? "0"),
+                      child:
+                          Text('${_readingData?.data.temperature}°C' ?? "0°C"),
                     )),
                   )
                 ],

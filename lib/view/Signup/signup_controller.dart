@@ -84,10 +84,7 @@ class SignupController extends GetxController {
     }
   }
 
-
-
-
- Future<Map<String, dynamic>> getReadings() async {
+  Future<Map<String, dynamic>> getReadings() async {
     var response = await http.get(
       Uri.parse('https://admin.ktirioapp.com/api/get_readings'),
       headers: {
@@ -110,10 +107,7 @@ class SignupController extends GetxController {
     }
   }
 
-
-
-
- // Method to logout
+  // Method to logout
   Future<Map<String, dynamic>> logout() async {
     if (_token == null) {
       return {
@@ -126,7 +120,8 @@ class SignupController extends GetxController {
       'Accept': 'application/json',
       'Authorization': 'Bearer $_token', // Include the token in the headers
     };
-    var request = http.Request('POST', Uri.parse('https://admin.ktirioapp.com/api/logout'));
+    var request = http.Request(
+        'POST', Uri.parse('https://admin.ktirioapp.com/api/logout'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -150,10 +145,7 @@ class SignupController extends GetxController {
     }
   }
 
-
-
-
- Future<Map<String, dynamic>> createSchedule({
+  Future<Map<String, dynamic>> createSchedule({
     required String date,
     required String time,
     required String task,
@@ -174,7 +166,7 @@ class SignupController extends GetxController {
     request.fields.addAll({
       'date': date,
       'time': time,
-      'user_id': _userId.toString(), 
+      'user_id': _userId.toString(),
       'task': task,
     });
     request.headers.addAll(headers);
@@ -195,11 +187,6 @@ class SignupController extends GetxController {
       };
     }
   }
-
-
-
-
-
 
 // Method to get data using the stored token
   Future<Map<String, dynamic>> getData() async {
