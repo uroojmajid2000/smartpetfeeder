@@ -57,7 +57,17 @@ class _LayoutScreenState extends State<LayoutScreen> {
     return Column(
       children: [
         SizedBox(
-          height: 80,
+          height: 40,
+        ),
+        Text(
+          'Live',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 32,
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w700,
+          ),
         ),
         Text(
           'Readings',

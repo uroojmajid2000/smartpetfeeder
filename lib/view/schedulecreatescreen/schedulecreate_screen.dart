@@ -272,7 +272,7 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
                                 backgroundColor: Colors.green,
                                 textColor: Colors.white,
                               );
-
+                              _nameController.text = '';
                               getSchedule();
                             } else {
                               print(
