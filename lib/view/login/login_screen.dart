@@ -160,6 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 backgroundColor: Colors.green,
                                 textColor: Colors.white,
                               );
+                              _signupController.getNotifications();
                               Get.toNamed(RouteName.layoutscreen);
                             } else {
                               Fluttertoast.showToast(
