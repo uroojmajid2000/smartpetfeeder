@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordValid = false;
   bool _isObscure = true;
+  bool _isLoading = false;
 
   void _validatePassword(String password) {
     setState(() {
@@ -117,50 +118,65 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   SizedBox(height: 25),
-                  CustomButton(
-                    text: 'Login',
-                    onTap: () async {
-                      String email = _emailController.text;
-                      String password = _passwordController.text;
+                  _isLoading
+                      ? CircularProgressIndicator(
+                          color: Colors.white,
+                        )
+                      : CustomButton(
+                          text: 'Login',
+                          onTap: () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
 
-                      if (email.isEmpty || password.isEmpty) {
-                        Fluttertoast.showToast(
-                          msg: "Email and Password can\'t be empty.",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                        );
-                        return;
-                      }
+                            String email = _emailController.text;
+                            String password = _passwordController.text;
 
-                      Map<String, dynamic> response =
-                          await _signupController.login(
-                        email: email,
-                        password: password,
-                      );
+                            if (email.isEmpty || password.isEmpty) {
+                              Fluttertoast.showToast(
+                                msg: "Email and Password can\'t be empty.",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                              );
+                              setState(() {
+                                _isLoading = false;
+                              });
+                              return;
+                            }
 
-                      if (response['success']) {
-                        Fluttertoast.showToast(
-                          msg: response['message'],
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                        );
-                        Get.toNamed(RouteName.layoutscreen);
-                      } else {
-                        Fluttertoast.showToast(
-                          msg: response['message'] ??
-                              "Login failed. Please try again.",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                        );
-                      }
-                    },
-                  ),
+                            Map<String, dynamic> response =
+                                await _signupController.login(
+                              email: email,
+                              password: password,
+                            );
+
+                            if (response['success']) {
+                              Fluttertoast.showToast(
+                                msg: response['message'],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                              );
+                              Get.toNamed(RouteName.layoutscreen);
+                            } else {
+                              Fluttertoast.showToast(
+                                msg: response['message'] ??
+                                    "Login failed. Please try again.",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                              );
+                            }
+
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          },
+                        ),
                 ],
               ),
             ),
