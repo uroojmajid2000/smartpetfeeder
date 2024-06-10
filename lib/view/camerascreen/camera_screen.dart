@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:smart_pet_feeder/res/components/notification_widget.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
 import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -20,6 +26,36 @@ class _CameraScreenState extends State<CameraScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  XFile? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(source: source);
+      setState(() {
+        _imageFile = pickedFile;
+      });
+    } catch (e) {
+      setState(() {
+        _imageFile = null;
+      });
+    }
+  }
+
+  Widget _buildImageContainer() {
+    if (_imageFile == null) {
+      return const Center(child: Text('No image selected.'));
+    } else {
+      return kIsWeb
+          ? Container(
+              height: 168, width: 400, child: Image.network(_imageFile!.path))
+          : Container(
+              height: 168,
+              width: 400,
+              child: Image.file(File(_imageFile!.path)));
+    }
   }
 
   Widget _getBody() {
@@ -56,17 +92,54 @@ class _CameraScreenState extends State<CameraScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
-              Container(
-                height: 168,
-                decoration: BoxDecoration(
-                  // color: Colors.amber,
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/cat_image.png"),
+              // Container(
+              //   height: 168,
+              //   decoration: BoxDecoration(
+              //     // color: Colors.amber,
+              //     image: DecorationImage(
+              //       image: AssetImage("assets/images/cat_image.png"),
 
-                    // NetworkImage(
-                    //     "https://via.placeholder.com/292x168"),
-                    fit: BoxFit.fill,
-                  ),
+              //       // NetworkImage(
+              //       //     "https://via.placeholder.com/292x168"),
+              //       fit: BoxFit.fill,
+              //     ),
+              //   ),
+              // )
+
+              _buildImageContainer(),
+
+              // FloatingActionButton(
+              //   onPressed: () => _pickImage(ImageSource.gallery),
+              //   heroTag: 'gallery',
+              //   tooltip: 'Pick Image from Gallery',
+              //   child: const Icon(Icons.photo),
+              // ),
+              // const SizedBox(height: 16),
+              // FloatingActionButton(
+              //   onPressed: () => _pickImage(ImageSource.camera),
+              //   heroTag: 'camera',
+              //   tooltip: 'Take a Photo',
+              //   child: const Icon(Icons.camera_alt),
+              // ),
+
+              Container(
+                color: Colors.green,
+                child: Column(
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          _pickImage(ImageSource.gallery);
+                        },
+                        child: Text("imGAE")),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          _pickImage(ImageSource.camera);
+                        },
+                        child: Text("CAMERA")),
+                  ],
                 ),
               )
             ],
@@ -166,7 +239,7 @@ class _CameraScreenState extends State<CameraScreen> {
                             SizedBox(
                               width: 5,
                             ),
-                           _isLoggingOut
+                            _isLoggingOut
                                 ? CircularProgressIndicator(
                                     color: Colors.white,
                                   )
