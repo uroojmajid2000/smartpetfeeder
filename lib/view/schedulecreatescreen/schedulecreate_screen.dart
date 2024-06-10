@@ -12,6 +12,7 @@ import 'package:smart_pet_feeder/res/components/schedule_done.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
 import 'package:simple_table_calendar/simple_table_calendar.dart';
 import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
+import 'package:smart_pet_feeder/view/layout/notification_model.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 import 'package:http/http.dart' as http;
@@ -42,11 +43,21 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
   }
 
   List<dynamic> scheduleData = [];
-
+  NotificationMoel? _getNotifcation;
   @override
   void initState() {
     super.initState();
     getSchedule();
+    fetchNotification();
+  }
+
+  Future<void> fetchNotification() async {
+    var result = await _signupController.getNotifications();
+    if (result['success']) {
+      setState(() {
+        _getNotifcation = NotificationMoel.fromJson(result['data']);
+      });
+    } else {}
   }
 
   Future<void> getSchedule() async {
@@ -383,8 +394,9 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
           NotificationWidget(
             color: Color(0xffFF0000),
             heading: 'Temperature',
-            details: 'High temperature detected!',
-            time: '2m ago',
+            details:
+                _getNotifcation!.data!.temp ?? 'High temperature detected!',
+            time: _getNotifcation!.data!.tempUpdatedAt ?? '2m ago',
           ),
           SizedBox(
             height: 10,
@@ -392,8 +404,8 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
           NotificationWidget(
             color: Color(0xffF87B20),
             heading: 'Humidity',
-            details: 'Humidity reached 50%',
-            time: '6m ago',
+            details: _getNotifcation!.data!.humidity ?? 'Humidity reached 50%',
+            time: _getNotifcation!.data!.humidityUpdatedAt ?? '6m ago',
           ),
           SizedBox(
             height: 10,
@@ -401,8 +413,8 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
           NotificationWidget(
             color: Color(0xff00A12D),
             heading: 'Moisture',
-            details: 'Moisture reached 30%',
-            time: '32m ago',
+            details: _getNotifcation!.data!.moisture ?? 'Moisture reached 30%',
+            time: _getNotifcation!.data!.moistureUpdatedAt ?? '32m ago',
           ),
         ],
       ),

@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:smart_pet_feeder/view/layout/notification_model.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -21,6 +22,24 @@ class _CameraScreenState extends State<CameraScreen> {
   final SignupController _signupController = Get.put(SignupController());
   bool _isLoggingOut = false;
   int _selectedIndex = 0;
+
+ NotificationMoel? _getNotifcation;
+ @override
+  void initState() {
+    super.initState();
+  
+    fetchNotification();
+  }
+ Future<void> fetchNotification() async {
+    var result = await _signupController.getNotifications();
+    if (result['success']) {
+      setState(() {
+        _getNotifcation = NotificationMoel.fromJson(result['data']);
+      });
+    } else {}
+  }
+
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -175,8 +194,9 @@ class _CameraScreenState extends State<CameraScreen> {
           NotificationWidget(
             color: Color(0xffFF0000),
             heading: 'Temperature',
-            details: 'High temperature detected!',
-            time: '2m ago',
+            details:
+                _getNotifcation!.data!.temp ?? 'High temperature detected!',
+            time: _getNotifcation!.data!.tempUpdatedAt ?? '2m ago',
           ),
           SizedBox(
             height: 10,
@@ -184,8 +204,8 @@ class _CameraScreenState extends State<CameraScreen> {
           NotificationWidget(
             color: Color(0xffF87B20),
             heading: 'Humidity',
-            details: 'Humidity reached 50%',
-            time: '6m ago',
+            details: _getNotifcation!.data!.humidity ?? 'Humidity reached 50%',
+            time: _getNotifcation!.data!.humidityUpdatedAt ?? '6m ago',
           ),
           SizedBox(
             height: 10,
@@ -193,8 +213,8 @@ class _CameraScreenState extends State<CameraScreen> {
           NotificationWidget(
             color: Color(0xff00A12D),
             heading: 'Moisture',
-            details: 'Moisture reached 30%',
-            time: '32m ago',
+            details: _getNotifcation!.data!.moisture ?? 'Moisture reached 30%',
+            time: _getNotifcation!.data!.moistureUpdatedAt ?? '32m ago',
           ),
         ],
       ),
