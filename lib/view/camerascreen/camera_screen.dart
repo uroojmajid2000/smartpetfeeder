@@ -45,17 +45,54 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Widget _buildImageContainer() {
-    if (_imageFile == null) {
-      return const Center(child: Text('No image selected.'));
-    } else {
-      return kIsWeb
-          ? Container(
-              height: 168, width: 400, child: Image.network(_imageFile!.path))
-          : Container(
-              height: 168,
-              width: 400,
-              child: Image.file(File(_imageFile!.path)));
-    }
+    return GestureDetector(
+      onTap: () => _showImageSourceActionSheet(context),
+      child: Container(
+        height: 168,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey),
+        ),
+        child: _imageFile == null
+            ? Icon(Icons.add_a_photo, color: Colors.grey, size: 50)
+            : kIsWeb
+                ? Image.network(_imageFile!.path, fit: BoxFit.contain)
+                : Image.file(File(_imageFile!.path), fit: BoxFit.cover),
+      ),
+    );
+  }
+
+  void _showImageSourceActionSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text('Gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_camera),
+                title: Text('Camera'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _getBody() {
@@ -107,41 +144,6 @@ class _CameraScreenState extends State<CameraScreen> {
               // )
 
               _buildImageContainer(),
-
-              // FloatingActionButton(
-              //   onPressed: () => _pickImage(ImageSource.gallery),
-              //   heroTag: 'gallery',
-              //   tooltip: 'Pick Image from Gallery',
-              //   child: const Icon(Icons.photo),
-              // ),
-              // const SizedBox(height: 16),
-              // FloatingActionButton(
-              //   onPressed: () => _pickImage(ImageSource.camera),
-              //   heroTag: 'camera',
-              //   tooltip: 'Take a Photo',
-              //   child: const Icon(Icons.camera_alt),
-              // ),
-
-              Container(
-                color: Colors.green,
-                child: Column(
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          _pickImage(ImageSource.gallery);
-                        },
-                        child: Text("imGAE")),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    GestureDetector(
-                        onTap: () {
-                          _pickImage(ImageSource.camera);
-                        },
-                        child: Text("CAMERA")),
-                  ],
-                ),
-              )
             ],
           ),
         ),
