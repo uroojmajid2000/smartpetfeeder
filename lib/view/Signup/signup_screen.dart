@@ -23,6 +23,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _cnicController = TextEditingController();
   bool _isPasswordValid = false;
   bool _isObscure = true;
+  bool _isLoading = false; // Add this line to manage loading state
 
   void _validatePassword(String password) {
     setState(() {
@@ -161,55 +162,73 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                     SizedBox(height: 25),
-                    CustomButton(
-                      text: 'Sign up',
-                      onTap: () async {
-                        String name = _nameController.text;
-                        String email = _emailController.text;
-                        String password = _passwordController.text;
-                        String contact = _contactController.text;
-                        String cnic = _cnicController.text;
+                    _isLoading
+                        ? CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : CustomButton(
+                            text: 'Sign up',
+                            onTap: () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
 
-                        // Perform validation
-                        if (name.isEmpty ||
-                            email.isEmpty ||
-                            password.isEmpty ||
-                            contact.isEmpty ||
-                            cnic.isEmpty) {
-                          Fluttertoast.showToast(
-                            msg: 'Please fill all required fields',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                          );
-                          return;
-                        }
+                              String name = _nameController.text;
+                              String email = _emailController.text;
+                              String password = _passwordController.text;
+                              String contact = _contactController.text;
+                              String cnic = _cnicController.text;
 
-                        Map<String, dynamic> result =
-                            await _signupController.signup(
-                          name: name,
-                          email: email,
-                          password: password,
-                          password_confirmation: password,
-                          contact: contact,
-                          cnic: cnic,
-                        );
+                              // Perform validation
+                              if (name.isEmpty ||
+                                  email.isEmpty ||
+                                  password.isEmpty ||
+                                  contact.isEmpty ||
+                                  cnic.isEmpty) {
+                                Fluttertoast.showToast(
+                                  msg: 'Please fill all required fields',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                );
+                                setState(() {
+                                  _isLoading =
+                                      false; // Set loading state to false
+                                });
+                                return;
+                              }
 
-                        Fluttertoast.showToast(
-                          msg: result['message'],
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          backgroundColor:
-                              result['success'] ? Colors.green : Colors.red,
-                          textColor: Colors.white,
-                        );
+                              Map<String, dynamic> result =
+                                  await _signupController.signup(
+                                name: name,
+                                email: email,
+                                password: password,
+                                password_confirmation: password,
+                                contact: contact,
+                                cnic: cnic,
+                              );
 
-                        if (result['success']) {
-                          Get.toNamed(RouteName.loginScreen);
-                        }
-                      },
-                    ),
+                              Fluttertoast.showToast(
+                                msg: result['message'],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: result['success']
+                                    ? Colors.green
+                                    : Colors.red,
+                                textColor: Colors.white,
+                              );
+
+                              if (result['success']) {
+                                Get.toNamed(RouteName.loginScreen);
+                              }
+
+                              setState(() {
+                                _isLoading =
+                                    false; // Set loading state to false
+                              });
+                            },
+                          ),
                   ],
                 ),
               ),
