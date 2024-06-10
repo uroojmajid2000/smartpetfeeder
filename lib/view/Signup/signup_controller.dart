@@ -107,6 +107,29 @@ class SignupController extends GetxController {
     }
   }
 
+  Future<Map<String, dynamic>> getNotifications() async {
+    var response = await http.get(
+      Uri.parse('https://admin.ktirioapp.com/api/notify'),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $_token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      return {
+        'success': true,
+        'data': jsonData,
+      };
+    } else {
+      return {
+        'success': false,
+        'message': response.reasonPhrase,
+      };
+    }
+  }
+
   // Method to logout
   Future<Map<String, dynamic>> logout() async {
     if (_token == null) {

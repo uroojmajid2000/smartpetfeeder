@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:smart_pet_feeder/res/components/notification_widget.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
 import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
+import 'package:smart_pet_feeder/view/layout/notification_model.dart';
 import 'package:smart_pet_feeder/view/layout/readin_model.dart';
 import 'package:smart_pet_feeder/view/login/login_screen.dart';
 
@@ -17,6 +18,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
   final SignupController _signupController = Get.put(SignupController());
   bool _isLoggingOut = false;
   ReadingModel? _readingData;
+  NotificationMoel? _getNotifcation;
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -29,6 +31,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
   void initState() {
     super.initState();
     fetchData();
+    fetchNotification();
   }
 
   Future<void> fetchData() async {
@@ -37,9 +40,16 @@ class _LayoutScreenState extends State<LayoutScreen> {
       setState(() {
         _readingData = ReadingModel.fromJson(result['data']);
       });
-    } else {
-      // Handle error
-    }
+    } else {}
+  }
+
+  Future<void> fetchNotification() async {
+    var result = await _signupController.getNotifications();
+    if (result['success']) {
+      setState(() {
+        _getNotifcation = NotificationMoel.fromJson(result['data']);
+      });
+    } else {}
   }
 
   Widget _getBody() {
@@ -189,8 +199,10 @@ class _LayoutScreenState extends State<LayoutScreen> {
           NotificationWidget(
             color: Color(0xffFF0000),
             heading: 'Temperature',
-            details: 'High temperature detected!',
-            time: '2m ago',
+            details:
+                _getNotifcation!.data!.temp ?? 'High temperature detected!',
+          
+            time: _getNotifcation!.data!.tempUpdatedAt ?? '2m ago',
           ),
           SizedBox(
             height: 10,
@@ -198,8 +210,12 @@ class _LayoutScreenState extends State<LayoutScreen> {
           NotificationWidget(
             color: Color(0xffF87B20),
             heading: 'Humidity',
-            details: 'Humidity reached 50%',
-            time: '6m ago',
+            details:
+               
+                _getNotifcation!.data!.humidity ?? 'Humidity reached 50%',
+            time:
+              
+                _getNotifcation!.data!.humidityUpdatedAt ?? '6m ago',
           ),
           SizedBox(
             height: 10,
@@ -207,8 +223,10 @@ class _LayoutScreenState extends State<LayoutScreen> {
           NotificationWidget(
             color: Color(0xff00A12D),
             heading: 'Moisture',
-            details: 'Moisture reached 30%',
-            time: '32m ago',
+            details:
+                _getNotifcation!.data!.moisture ?? 'Moisture reached 30%',
+            time:
+                _getNotifcation!.data!.moistureUpdatedAt ?? '32m ago',
           ),
         ],
       ),
