@@ -101,6 +101,30 @@ class _LayoutScreenState extends State<LayoutScreen> {
               Row(
                 children: [
                   Text(
+                    'Pet Status:  ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(color: Color(0xFFD9D9D9)),
+                    child: Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(_readingData?.data.petStatus ?? ""),
+                    )),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  Text(
                     'Temperature:  ',
                     style: TextStyle(
                       color: Colors.white,
@@ -201,7 +225,6 @@ class _LayoutScreenState extends State<LayoutScreen> {
             heading: 'Temperature',
             details:
                 _getNotifcation!.data!.temp ?? 'High temperature detected!',
-          
             time: _getNotifcation!.data!.tempUpdatedAt ?? '2m ago',
           ),
           SizedBox(
@@ -210,12 +233,8 @@ class _LayoutScreenState extends State<LayoutScreen> {
           NotificationWidget(
             color: Color(0xffF87B20),
             heading: 'Humidity',
-            details:
-               
-                _getNotifcation!.data!.humidity ?? 'Humidity reached 50%',
-            time:
-              
-                _getNotifcation!.data!.humidityUpdatedAt ?? '6m ago',
+            details: _getNotifcation!.data!.humidity ?? 'Humidity reached 50%',
+            time: _getNotifcation!.data!.humidityUpdatedAt ?? '6m ago',
           ),
           SizedBox(
             height: 10,
@@ -223,10 +242,17 @@ class _LayoutScreenState extends State<LayoutScreen> {
           NotificationWidget(
             color: Color(0xff00A12D),
             heading: 'Moisture',
-            details:
-                _getNotifcation!.data!.moisture ?? 'Moisture reached 30%',
-            time:
-                _getNotifcation!.data!.moistureUpdatedAt ?? '32m ago',
+            details: _getNotifcation!.data!.moisture ?? 'Moisture reached 30%',
+            time: _getNotifcation!.data!.moistureUpdatedAt ?? '32m ago',
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          NotificationWidget(
+            color: Color.fromARGB(255, 198, 238, 20),
+            heading: 'Pet Status',
+            details: _getNotifcation!.data!.petStatus ?? '',
+            time: _getNotifcation!.data!.tempUpdatedAt ?? '32m ago',
           ),
         ],
       ),

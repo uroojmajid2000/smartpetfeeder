@@ -32,6 +32,7 @@ class Data {
   String? moisture;
   String? moistureUpdatedAt;
   String? status;
+  String? petStatus;
   String? createdAt;
   String? updatedAt;
 
@@ -45,6 +46,7 @@ class Data {
       this.moisture,
       this.moistureUpdatedAt,
       this.status,
+      this.petStatus,
       this.createdAt,
       this.updatedAt});
 
@@ -58,6 +60,7 @@ class Data {
     moisture = json['moisture'];
     moistureUpdatedAt = json['moisture_updated_at'];
     status = json['status'];
+    petStatus = json['pet_status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -73,6 +76,7 @@ class Data {
     data['moisture'] = this.moisture;
     data['moisture_updated_at'] = this.moistureUpdatedAt;
     data['status'] = this.status;
+    data['pet_status'] = this.status;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;

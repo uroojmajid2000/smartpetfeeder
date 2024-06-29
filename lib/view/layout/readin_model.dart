@@ -25,6 +25,7 @@ class Data {
   final String humidity;
   final String moisture;
   final String status;
+  final String petStatus;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -35,6 +36,7 @@ class Data {
     required this.humidity,
     required this.moisture,
     required this.status,
+    required this.petStatus,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -47,6 +49,7 @@ class Data {
       humidity: json['humidity'],
       moisture: json['moisture'],
       status: json['status'],
+      petStatus: json['pet_status'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );

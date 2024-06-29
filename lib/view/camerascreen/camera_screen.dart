@@ -23,14 +23,15 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _isLoggingOut = false;
   int _selectedIndex = 0;
 
- NotificationMoel? _getNotifcation;
- @override
+  NotificationMoel? _getNotifcation;
+  @override
   void initState() {
     super.initState();
-  
+
     fetchNotification();
   }
- Future<void> fetchNotification() async {
+
+  Future<void> fetchNotification() async {
     var result = await _signupController.getNotifications();
     if (result['success']) {
       setState(() {
@@ -38,8 +39,6 @@ class _CameraScreenState extends State<CameraScreen> {
       });
     } else {}
   }
-
-
 
   void _onItemTapped(int index) {
     setState(() {
@@ -215,6 +214,15 @@ class _CameraScreenState extends State<CameraScreen> {
             heading: 'Moisture',
             details: _getNotifcation!.data!.moisture ?? 'Moisture reached 30%',
             time: _getNotifcation!.data!.moistureUpdatedAt ?? '32m ago',
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          NotificationWidget(
+            color: Color.fromARGB(255, 198, 238, 20),
+            heading: 'Pet Status',
+            details: _getNotifcation!.data!.petStatus ?? '',
+            time: _getNotifcation!.data!.tempUpdatedAt ?? '32m ago',
           ),
         ],
       ),

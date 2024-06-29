@@ -416,6 +416,15 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
             details: _getNotifcation!.data!.moisture ?? 'Moisture reached 30%',
             time: _getNotifcation!.data!.moistureUpdatedAt ?? '32m ago',
           ),
+          SizedBox(
+            height: 10,
+          ),
+          NotificationWidget(
+            color: Color.fromARGB(255, 198, 238, 20),
+            heading: 'Pet Status',
+            details: _getNotifcation!.data!.petStatus ?? '',
+            time: _getNotifcation!.data!.tempUpdatedAt ?? '32m ago',
+          ),
         ],
       ),
     );
