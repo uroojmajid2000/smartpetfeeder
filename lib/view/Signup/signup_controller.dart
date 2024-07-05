@@ -141,7 +141,7 @@ class SignupController extends GetxController {
 
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer $_token', // Include the token in the headers
+      'Authorization': 'Bearer $_token', 
     };
     var request = http.Request(
         'POST', Uri.parse('https://admin.ktirioapp.com/api/logout'));
@@ -211,7 +211,7 @@ class SignupController extends GetxController {
     }
   }
 
-// Method to get data using the stored token
+
   Future<Map<String, dynamic>> getData() async {
     if (_token == null) {
       return {
@@ -222,7 +222,7 @@ class SignupController extends GetxController {
 
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer $_token', // Include the token in the headers
+      'Authorization': 'Bearer $_token',
     };
 
     var response = await http.get(

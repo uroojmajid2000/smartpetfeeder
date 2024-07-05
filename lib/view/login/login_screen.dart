@@ -9,6 +9,10 @@ import 'package:smart_pet_feeder/res/components/custom_textfield.dart';
 import 'package:smart_pet_feeder/res/routes/routes_name.dart';
 import 'package:smart_pet_feeder/view/Signup/signup_controller.dart';
 
+
+
+
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -17,6 +21,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+
+  
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordValid = false;
@@ -42,6 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xff154C79),
+       
         body: Stack(
           fit: StackFit.expand,
           children: [
@@ -86,37 +94,37 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     onSuffixIconPressed: _togglePasswordVisibility,
                   ),
-                  SizedBox(height: 25),
-                  GestureDetector(
-                    onTap: () {
-                      Get.toNamed(RouteName.signupScreen);
-                    },
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Don\'t have an account? ',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'Sign Up',
-                            style: TextStyle(
-                              color: Color(0xFFF57366),
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                  SizedBox(height: 20),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Get.toNamed(RouteName.signupScreen);
+                  //   },
+                  //   child: Text.rich(
+                  //     TextSpan(
+                  //       children: [
+                  //         TextSpan(
+                  //           text: 'Don\'t have an account? ',
+                  //           style: TextStyle(
+                  //             color: Colors.white,
+                  //             fontSize: 12,
+                  //             fontFamily: 'Montserrat',
+                  //             fontWeight: FontWeight.w400,
+                  //           ),
+                  //         ),
+                  //         TextSpan(
+                  //           text: 'Sign Up',
+                  //           style: TextStyle(
+                  //             color: Color(0xFFF57366),
+                  //             fontSize: 12,
+                  //             fontFamily: 'Montserrat',
+                  //             fontWeight: FontWeight.w400,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     textAlign: TextAlign.center,
+                  //   ),
+                  // ),
                   SizedBox(height: 25),
                   _isLoading
                       ? CircularProgressIndicator(
