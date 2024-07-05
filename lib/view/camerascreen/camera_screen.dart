@@ -51,13 +51,11 @@ class _CameraScreenState extends State<CameraScreen> {
     });
   }
 
-   @override
+  @override
   void dispose() {
-
     _notificationTimer?.cancel();
     super.dispose();
   }
-
 
   void _onItemTapped(int index) {
     setState(() {
@@ -387,13 +385,31 @@ class _CameraScreenState extends State<CameraScreen> {
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.notification_add_rounded),
+              // icon:
+
+              //  Icon(Icons.notification_add_rounded),
+              // icon: _getNotifcation?.data?.notify_value >= 29
+              //     ? Image.asset(
+              //         "assets/icons/active.png",
+              //         color: Colors.white,
+              //         height: 24, // Specify the size of the icon
+              //         width: 24,
+              //       )
+              //     : Icon(Icons.notifications),
+
+              icon: Image.asset(
+                "assets/icons/active.png",
+                color: Colors.white,
+                height: 24, // Specify the size of the icon
+                width: 24,
+              ),
+
               label: '',
             ),
           ],

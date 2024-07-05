@@ -26,6 +26,7 @@ class Data {
   int? id;
   int? userId;
   String? temp;
+  dynamic? notify_value;
   String? tempUpdatedAt;
   String? humidity;
   String? humidityUpdatedAt;
@@ -40,6 +41,7 @@ class Data {
       {this.id,
       this.userId,
       this.temp,
+      this.notify_value,
       this.tempUpdatedAt,
       this.humidity,
       this.humidityUpdatedAt,
@@ -54,6 +56,7 @@ class Data {
     id = json['id'];
     userId = json['user_id'];
     temp = json['temp'];
+    notify_value = json['notify_value'];
     tempUpdatedAt = json['temp_updated_at'];
     humidity = json['humidity'];
     humidityUpdatedAt = json['humidity_updated_at'];
@@ -69,6 +72,7 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['user_id'] = this.userId;
+    data['notify_value'] = this.notify_value;
     data['temp'] = this.temp;
     data['temp_updated_at'] = this.tempUpdatedAt;
     data['humidity'] = this.humidity;
