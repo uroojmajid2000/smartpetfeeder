@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -29,7 +31,10 @@ class _CameraScreenState extends State<CameraScreen> {
     super.initState();
 
     fetchNotification();
+    _startTimers();
   }
+
+  Timer? _notificationTimer;
 
   Future<void> fetchNotification() async {
     var result = await _signupController.getNotifications();
@@ -39,6 +44,20 @@ class _CameraScreenState extends State<CameraScreen> {
       });
     } else {}
   }
+
+  void _startTimers() {
+    _notificationTimer = Timer.periodic(Duration(seconds: 20), (timer) {
+      fetchNotification();
+    });
+  }
+
+   @override
+  void dispose() {
+
+    _notificationTimer?.cancel();
+    super.dispose();
+  }
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -218,12 +237,12 @@ class _CameraScreenState extends State<CameraScreen> {
           SizedBox(
             height: 10,
           ),
-          NotificationWidget(
-            color: Color.fromARGB(255, 198, 238, 20),
-            heading: 'Pet Status',
-            details: _getNotifcation!.data!.petStatus ?? '',
-            time: _getNotifcation!.data!.tempUpdatedAt ?? '32m ago',
-          ),
+          // NotificationWidget(
+          //   color: Color.fromARGB(255, 198, 238, 20),
+          //   heading: 'Pet Status',
+          //   details: _getNotifcation!.data!.petStatus ?? '',
+          //   time: _getNotifcation!.data!.tempUpdatedAt ?? '32m ago',
+          // ),
         ],
       ),
     );

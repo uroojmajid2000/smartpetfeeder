@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -49,6 +50,7 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
     super.initState();
     getSchedule();
     fetchNotification();
+    _startTimers();
   }
 
   Future<void> fetchNotification() async {
@@ -58,6 +60,19 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
         _getNotifcation = NotificationMoel.fromJson(result['data']);
       });
     } else {}
+  }
+
+  Timer? _notificationTimer;
+  void _startTimers() {
+    _notificationTimer = Timer.periodic(Duration(seconds: 20), (timer) {
+      fetchNotification();
+    });
+  }
+
+  @override
+  void dispose() {
+    _notificationTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> getSchedule() async {
@@ -419,12 +434,12 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
           SizedBox(
             height: 10,
           ),
-          NotificationWidget(
-            color: Color.fromARGB(255, 198, 238, 20),
-            heading: 'Pet Status',
-            details: _getNotifcation!.data!.petStatus ?? '',
-            time: _getNotifcation!.data!.tempUpdatedAt ?? '32m ago',
-          ),
+          // NotificationWidget(
+          //   color: Color.fromARGB(255, 198, 238, 20),
+          //   heading: 'Pet Status',
+          //   details: _getNotifcation!.data!.petStatus ?? '',
+          //   time: _getNotifcation!.data!.tempUpdatedAt ?? '32m ago',
+          // ),
         ],
       ),
     );

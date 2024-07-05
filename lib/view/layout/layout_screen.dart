@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_pet_feeder/res/components/notification_widget.dart';
@@ -27,11 +29,31 @@ class _LayoutScreenState extends State<LayoutScreen> {
     });
   }
 
+  Timer? _dataTimer;
+  Timer? _notificationTimer;
+
   @override
   void initState() {
     super.initState();
     fetchData();
     fetchNotification();
+    _startTimers();
+  }
+
+  void _startTimers() {
+    _dataTimer = Timer.periodic(Duration(seconds: 5), (timer) {
+      fetchData();
+    });
+    _notificationTimer = Timer.periodic(Duration(seconds: 20), (timer) {
+      fetchNotification();
+    });
+  }
+
+   @override
+  void dispose() {
+    _dataTimer?.cancel();
+    _notificationTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> fetchData() async {
@@ -101,7 +123,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
               Row(
                 children: [
                   Text(
-                    'Pet Status:  ',
+                    'Pet Name:  ',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22,
@@ -248,12 +270,12 @@ class _LayoutScreenState extends State<LayoutScreen> {
           SizedBox(
             height: 10,
           ),
-          NotificationWidget(
-            color: Color.fromARGB(255, 198, 238, 20),
-            heading: 'Pet Status',
-            details: _getNotifcation!.data!.petStatus ?? '',
-            time: _getNotifcation!.data!.tempUpdatedAt ?? '32m ago',
-          ),
+          // NotificationWidget(
+          //   color: Color.fromARGB(255, 198, 238, 20),
+          //   heading: 'Pet Status',
+          //   details: _getNotifcation!.data!.petStatus ?? '',
+          //   time: _getNotifcation!.data!.tempUpdatedAt ?? '32m ago',
+          // ),
         ],
       ),
     );
