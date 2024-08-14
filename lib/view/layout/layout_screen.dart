@@ -23,6 +23,8 @@ class _LayoutScreenState extends State<LayoutScreen> {
   NotificationMoel? _getNotifcation;
   int _selectedIndex = 0;
 
+  bool _isNotificationActive = false;
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -62,7 +64,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
       setState(() {
         _readingData = ReadingModel.fromJson(result['data']);
       });
-    } else {}
+    }
   }
 
   Future<void> fetchNotification() async {
@@ -70,8 +72,9 @@ class _LayoutScreenState extends State<LayoutScreen> {
     if (result['success']) {
       setState(() {
         _getNotifcation = NotificationMoel.fromJson(result['data']);
+        _isNotificationActive = !_isNotificationActive; 
       });
-    } else {}
+    }
   }
 
   Widget _getBody() {
@@ -375,12 +378,6 @@ class _LayoutScreenState extends State<LayoutScreen> {
                             ),
                             SizedBox(height: 25),
                             GestureDetector(
-                              // onTap: () {
-                              //   setState(() {
-                              //     _selectedIndex = 0;
-                              //   });
-                              // },
-
                               onTap: () {
                                 Get.toNamed(RouteName.camerascreen);
                               },
@@ -389,12 +386,6 @@ class _LayoutScreenState extends State<LayoutScreen> {
                             ),
                             SizedBox(height: 25),
                             GestureDetector(
-                              // onTap: () {
-                              //   setState(() {
-                              //     _selectedIndex = 0;
-                              //   });
-                              // },
-
                               onTap: () {
                                 Get.toNamed(RouteName.schedulecreatescreen);
                               },
@@ -423,26 +414,40 @@ class _LayoutScreenState extends State<LayoutScreen> {
               label: '',
             ),
             BottomNavigationBarItem(
-              // icon: Icon((_getNotifcation?.data?.notify_value >= 29
-              //     ?"assets/icons/active.png"
-              //     :
-              //      Icons.notification_add
-              //     ) as IconData?),
-              // icon: _getNotifcation?.data?.notify_value >= 29
-              //     ? Image.asset(
-              //         "assets/icons/active.png",
-              //         color: Colors.white,
-              //         height: 24, // Specify the size of the icon
-              //         width: 24,
-              //       )
-              //     : Icon(Icons.notifications),
+              icon: _isNotificationActive
+                  ? Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                      size: 24,
+                    )
 
-                icon: Image.asset(
-                "assets/icons/active.png",
-                color: Colors.white,
-                height: 24, // Specify the size of the icon
-                width: 24,
-              ),
+                  //  Image.asset(
+                  //     "assets/icons/active.png",
+                  //     color: Colors.white,
+                  //     height: 24,
+                  //     width: 24,
+                  //   )
+                  :
+
+                  // Image.asset(
+                  //     "assets/icons/inactive.png",
+                  //     color: Colors.white,
+                  //     height: 24,
+                  //     width: 24,
+                  //   ),
+
+                  // Icon(
+                  //     Icons.notifications_active,
+                  //     color: Colors.red,
+                  //     size: 24,
+                  //   ),
+
+                  Image.asset(
+                      "assets/icons/active.png",
+                      color: Colors.white,
+                      height: 24,
+                      width: 24,
+                    ),
               label: '',
             ),
           ],

@@ -25,6 +25,8 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _isLoggingOut = false;
   int _selectedIndex = 0;
 
+  bool _isNotificationActive = false;
+
   NotificationMoel? _getNotifcation;
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _CameraScreenState extends State<CameraScreen> {
     if (result['success']) {
       setState(() {
         _getNotifcation = NotificationMoel.fromJson(result['data']);
+        _isNotificationActive = !_isNotificationActive;
       });
     } else {}
   }
@@ -391,25 +394,40 @@ class _CameraScreenState extends State<CameraScreen> {
               label: '',
             ),
             BottomNavigationBarItem(
-              // icon:
+              icon: _isNotificationActive
+                  ? Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                      size: 24,
+                    )
 
-              //  Icon(Icons.notification_add_rounded),
-              // icon: _getNotifcation?.data?.notify_value >= 29
-              //     ? Image.asset(
-              //         "assets/icons/active.png",
-              //         color: Colors.white,
-              //         height: 24, // Specify the size of the icon
-              //         width: 24,
-              //       )
-              //     : Icon(Icons.notifications),
+                  //  Image.asset(
+                  //     "assets/icons/active.png",
+                  //     color: Colors.white,
+                  //     height: 24,
+                  //     width: 24,
+                  //   )
+                  :
 
-              icon: Image.asset(
-                "assets/icons/active.png",
-                color: Colors.white,
-                height: 24, // Specify the size of the icon
-                width: 24,
-              ),
+                  // Image.asset(
+                  //     "assets/icons/inactive.png",
+                  //     color: Colors.white,
+                  //     height: 24,
+                  //     width: 24,
+                  //   ),
 
+                  // Icon(
+                  //     Icons.notifications_active,
+                  //     color: Colors.red,
+                  //     size: 24,
+                  //   ),
+
+                  Image.asset(
+                      "assets/icons/active.png",
+                      color: Colors.white,
+                      height: 24,
+                      width: 24,
+                    ),
               label: '',
             ),
           ],

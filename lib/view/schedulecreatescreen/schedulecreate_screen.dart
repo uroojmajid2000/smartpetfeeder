@@ -36,6 +36,7 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
   bool isCreateSelected = true;
   bool _isLoggingOut = false;
   bool _isLoading = false;
+  bool _isNotificationActive = false;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -58,6 +59,7 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
     if (result['success']) {
       setState(() {
         _getNotifcation = NotificationMoel.fromJson(result['data']);
+        _isNotificationActive = !_isNotificationActive;
       });
     } else {}
   }
@@ -573,22 +575,40 @@ class _ScheduleCreateScreenState extends State<ScheduleCreateScreen> {
               label: '',
             ),
             BottomNavigationBarItem(
-              // icon: Icon(Icons.notification_add_rounded),
-              // icon: _getNotifcation?.data?.notify_value >= 29
-              //     ? Image.asset(
-              //         "assets/icons/active.png",
-              //         color: Colors.white,
-              //         height: 24, // Specify the size of the icon
-              //         width: 24,
-              //       )
-              //     : Icon(Icons.notifications),
+              icon: _isNotificationActive
+                  ? Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                      size: 24,
+                    )
 
-              icon: Image.asset(
-                "assets/icons/active.png",
-                color: Colors.white,
-                height: 24, // Specify the size of the icon
-                width: 24,
-              ),
+                  //  Image.asset(
+                  //     "assets/icons/active.png",
+                  //     color: Colors.white,
+                  //     height: 24,
+                  //     width: 24,
+                  //   )
+                  :
+
+                  // Image.asset(
+                  //     "assets/icons/inactive.png",
+                  //     color: Colors.white,
+                  //     height: 24,
+                  //     width: 24,
+                  //   ),
+
+                  // Icon(
+                  //     Icons.notifications_active,
+                  //     color: Colors.red,
+                  //     size: 24,
+                  //   ),
+
+                  Image.asset(
+                      "assets/icons/active.png",
+                      color: Colors.white,
+                      height: 24,
+                      width: 24,
+                    ),
               label: '',
             ),
           ],
